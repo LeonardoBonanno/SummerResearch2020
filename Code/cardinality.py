@@ -1,3 +1,5 @@
+# code to generate cardinality of ranked unlabeled trees with n leaves and c cherries
+
 def cardinality(n, c):
     if c == 0:
         return 0
@@ -7,5 +9,6 @@ def cardinality(n, c):
         return 0
     return cardinality(n - 1, c) * c + cardinality(n - 1, c - 1) * (n - 2 * c + 1)
 
+# experimentation for path method
 for c in range(1, 11):
     print(20, c, cardinality(20, c) * 2**(-c))

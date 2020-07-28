@@ -1,6 +1,8 @@
 from generationAltPerm import *
 from permsToTrees import *
 
+N = 1000
+
 def generateUniformTree(n):
     return complement(convertPerm(generatePerm(n)))
 
@@ -17,6 +19,7 @@ def maximalElement(perm):
     return maxIndex, maxVal
 
 class Tree(object):
+    om = [0] * N
     def __init__(self, data):
         self.data = data
         self.right = None
@@ -35,17 +38,29 @@ class Tree(object):
         self.left = leftTree
 
     def traverse(self):
+        pair = [0,0]
         if self.left is not None:
-            print(self.data, "-> ", self.left.data)
+            pair[0] = self.left.data
             self.left.traverse()
-        else:
-            print(self.data, "->", "LEAF")
         if self.right is not None:
-            print(self.data, "-> ", self.right.data)
+            pair[1] = self.right.data
             self.right.traverse()
-        else:
-            print(self.data, "->", "LEAF")
-    
+        pair = tuple(sorted(pair))
+        Tree.om[self.data - 1] = pair
+
+    def calculateCherries(self):
+        counter = 0
+        for i in range(N):
+            if Tree.om[i] == (0,0):
+                counter += 1
+        return counter
+        
+    def __str__(self):
+        treeAsString = ""
+        for i in range(N):
+            treeAsString += str(Tree.om[i]) + "^{" + str(i + 1) + "}" + "\n"
+        return treeAsString
+
 
 def buildTree(perm):
     n = len(perm)
@@ -59,11 +74,13 @@ def buildTree(perm):
         newTree.setLeft(buildTree(perm[maxIndex + 1:]))
     return newTree
 
-
-randomTreePerm = generateUniformTree(10)
-print(randomTreePerm)
+randomTreePerm = generateUniformTree(N)
 randomTree = buildTree(randomTreePerm)
 randomTree.traverse()
+print(randomTree)
+print(randomTree.calculateCherries())
+
+
 
 
     

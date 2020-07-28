@@ -5,7 +5,7 @@ import random
 import math
 
 N = 30
-TRIALS = 5
+TRIALS = 1
 
 def update(u, x):
     return 1 - (2 / math.pi) * math.asin(u * math.sin(math.pi * x/2))

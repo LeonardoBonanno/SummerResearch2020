@@ -1,10 +1,13 @@
 from generationAltPerm import *
 from permsToTrees import *
 
-N = 1000
+N = 20
 
 def generateUniformTree(n):
     return complement(convertPerm(generatePerm(n)))
+
+def mySort(tuple):
+    return tuple[2]
 
 def generateUniformTrees(n, samples):
     return [generateUniformTree(n) for _ in range(samples)]
@@ -19,7 +22,6 @@ def maximalElement(perm):
     return maxIndex, maxVal
 
 class Tree(object):
-    om = [0] * N
     def __init__(self, data):
         self.data = data
         self.right = None
@@ -37,28 +39,42 @@ class Tree(object):
     def setLeft(self, leftTree):
         self.left = leftTree
 
-    def traverse(self):
-        pair = [0,0]
-        if self.left is not None:
-            pair[0] = self.left.data
-            self.left.traverse()
-        if self.right is not None:
-            pair[1] = self.right.data
-            self.right.traverse()
-        pair = tuple(sorted(pair))
-        Tree.om[self.data - 1] = pair
+    def calculateCherriesHelper(self, cherries):
+        leftEmpty = self.left is None
+        rightEmpty = self.right is None
+        if leftEmpty and rightEmpty:
+            cherries[0] += 1
+        if not leftEmpty:
+            self.left.calculateCherriesHelper(cherries)
+        if not rightEmpty:
+            self.right.calculateCherriesHelper(cherries)
 
     def calculateCherries(self):
-        counter = 0
-        for i in range(N):
-            if Tree.om[i] == (0,0):
-                counter += 1
-        return counter
+        cherries = [0]
+        self.calculateCherriesHelper(cherries)
+        return cherries[0]
+        
+
+    def traverse(self, representation):
+        info = [0,0]
+        if self.left is not None:
+            info[0] = self.left.data
+            self.left.traverse(representation)
+        if self.right is not None:
+            info[1] = self.right.data
+            self.right.traverse(representation)
+        info = sorted(info)
+        info.append(self.data)
+        info = tuple(info)
+        representation.append(info)
         
     def __str__(self):
+        representation = []
+        self.traverse(representation)
+        representation.sort(key = mySort)
         treeAsString = ""
-        for i in range(N):
-            treeAsString += str(Tree.om[i]) + "^{" + str(i + 1) + "}" + "\n"
+        for i in range(len(representation)):
+            treeAsString += str((representation[i][0], representation[i][1])) + "^{" + str(representation[i][2]) + "}" + "\n"
         return treeAsString
 
 
@@ -74,11 +90,10 @@ def buildTree(perm):
         newTree.setLeft(buildTree(perm[maxIndex + 1:]))
     return newTree
 
-randomTreePerm = generateUniformTree(N)
-randomTree = buildTree(randomTreePerm)
-randomTree.traverse()
+randomTree = buildTree(generateUniformTree(N))
 print(randomTree)
 print(randomTree.calculateCherries())
+
 
 
 

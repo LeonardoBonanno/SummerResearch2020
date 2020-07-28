@@ -41,21 +41,21 @@ def convertPerm(perm):
         minIndex = maxIndex
     return convertPerm(perm[0:minIndex]) + [perm[minIndex]] + convertPerm(perm[minIndex + 1:])
 
-def calculatePermCherries(perm):
+def calculateCherries(perm):
     convertedPerm = convertPerm(perm)
     cherries = [0]
-    calculatePermCherriesHelper(perm, cherries)
+    calculateCherriesHelper(perm, cherries)
     return cherries[0]
 
-def calculatePermCherriesHelper(perm, cherries):
+def calculateCherriesHelper(perm, cherries):
     n = len(perm)
     if n == 1:
         cherries[0] += 1
     maxIndex, maxVal = maximalElement(perm)
     if maxIndex != 0:
-        calculatePermCherriesHelper(perm[:maxIndex], cherries)
+        calculateCherriesHelper(perm[:maxIndex], cherries)
     if maxIndex != n - 1:
-        calculatePermCherriesHelper(perm[maxIndex + 1:], cherries)
+        calculateCherriesHelper(perm[maxIndex + 1:], cherries)
 
 
 

@@ -61,7 +61,6 @@ def testMethod(trials, n):
     for entry in perms.keys():
         print(entry, perms[entry] * 100 / trials, " %")
 
-testMethod(TRIALS, N)
         
     
     

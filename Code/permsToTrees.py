@@ -32,8 +32,5 @@ def convertPerm(perm):
         minIndex = maxIndex
     return convertPerm(perm[0:minIndex]) + [perm[minIndex]] + convertPerm(perm[minIndex + 1:])
 
-
-
-            
             
         

@@ -90,11 +90,6 @@ def buildTree(perm):
         newTree.setLeft(buildTree(perm[maxIndex + 1:]))
     return newTree
 
-randomTree = buildTree(generateUniformTree(N))
-print(randomTree)
-print(randomTree.calculateCherries())
-
-
 
 
 

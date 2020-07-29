@@ -1,0 +1,127 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathrsfs}
+\usepackage{indentfirst}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage[all]{xy}
+\usepackage{hyperref}
+\usepackage[edges]{forest}
+\usepackage{xcolor}
+\usepackage{setspace}
+\definecolor{darkred}{rgb}{0.5,0.15,0.15}
+\hypersetup{colorlinks=true,urlcolor=darkred,linkcolor=darkred,citecolor=darkred}
+\pdfpagewidth 8.5in
+\pdfpageheight 11in
+
+\setlength\topmargin{0in}
+\setlength\headheight{0in}
+\setlength\headsep{0in}
+\setlength\textheight{7.7in}
+\setlength\textwidth{6.5in}
+\setlength\oddsidemargin{0in}
+\setlength\evensidemargin{0in}
+\setlength\parindent{0.25in}
+\setlength\parskip{0in}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}{Definition}[section]
+\newtheorem{problem}[definition]{Problem}
+\newtheorem{question}[definition]{Question}
+\newtheorem{proposition}[definition]{Proposition}
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{conjecture}[definition]{Conjecture}
+\newtheorem{corollary}[definition]{Corollary}
+\newtheorem{assumption}[definition]{Assumption}
+\newtheorem{remark}[definition]{Remark}
+\newtheorem{example}[definition]{Example}
+\newtheorem{notation}[definition]{Notation}
+
+%%% useful new commands
+
+%% sets
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+
+%% analysis
+\newcommand{\eps}{\epsilon}
+\newcommand{\cL}{\mathcal{L}} %% script L
+
+%% new functions
+\DeclareMathOperator{\lub}{lub}
+
+\title{Alternating Permutations and Tajima Trees}
+\author{Leonardo Bonanno, Julia Palacios}
+\date{July 27, 2020}
+\begin{document}
+
+\maketitle
+
+\section{Introduction/Preliminaries}
+For the biological and statistical procedures such as those in $\cite{Capello}$, it is necessary to sample from the space of tajima (ranked unlabeled) trees. This has been achieved previously using a MCMC algorithm. In this paper, we present an $O\left(n\log n\right)$ algorithm to sample exactly uniformly from the space of tajima trees using ideas from $\cite{Donaghey}$ and $\cite{Marchal}$, and then discuss applications in population genetics. More stuff needs to be added to this section when the applications are added and depending on how much more/what background information is needed because I am currently unsure. 
+
+\section{Bijection Between Alternating Permutations and Ranked Unlabeled Trees}
+Let $A_n$ denote the set of alternating permutations on $\{1, \ldots n\}$, and $\tau_{n + 1}^{R}$, the set of tajima trees with $n + 1$ leaves (and hence $n$ branchpoints). In this section, we establish a canonical bijection beween $A_n$ and $\tau_{n + 1}^{R}$. 
+In $\cite{Capello}$, the authors establish that the cardinality of the space of tajima trees with $n$ leaves is $E_{n-1}$, the $n-1$ Euler-Zigzag number, satisfying the recurrence relation.
+\begin{equation}
+2E_{n+1} = \sum_{k = 0}^{n} {n \choose k} E_{k} E_{n-k}
+\end{equation} 
+\cite{Stanley} shows that the n-th Euler-Zigzag number is also the cardinality of the set of alternating up-down and down-up permutations of $\{1, \ldots n-1\}$. These identical cardinalities indicate that there must be a bijection between these two groups. \cite{Donaghey} establishes a natural bijection between the set of binary increasing trees with $n$ vertices and the set of alternating permutataions of $\{1, \ldots n\}$ using a method of nestling and relative complementing. In fact,each  binary increasing trees with $n$ vertices is the internal branches of a tajima tree with $n + 1$ vertices. Thus, the bijection using in $\text{5}$ can be easily extended to present a bijection between the tajima trees with $n + 1$ leaves and alternating permutations on $\{1, \ldots n-1\}$. With this bijection, to sample uniformly from the space of tajima trees, it is sufficient to sample uniformly from the space of up-down (or equivalently down-up) alternating permutations, an algorithm presented by $\cite{Marchal}$ is presented in section 4.
+
+\section{Case n = 4 and n = 5}
+In this section we present the bijection between the space of tajima trees, binary increasing trees and  alternating permutations.
+Below we present the bijection for the case $n = 4$.
+Here we present the bijection for the case $n = 5$. INSERT DIAGRAMS HERE. 
+
+\section{Generating A Uniformly Random Alternating Permution}
+In $\cite{Marchal}$, the author presents an $O\left(n\log n\right)$ algorithm to generate a uniform random (on the space of all, both up-down and down-up) permutations using the theory of quasistationary markov chains. It improves on the $O\left(n^2\right)$ time that can be achieved using boltzmann sampling, and is almost surely below the unknown mixing time of the alternating permutations markov chain described in the section below. Additionally, it provides a mechanism for exact sampling from this distribution. Additionally, the algorithm can easily be adapted to generating a uniform sample from the space of either up-down or down-up alternating permutations by simply taking the complement, as described in \cite{Donaghey} of the end result achieved by the algorithm if it is oriented incorrectly
+
+\section{Markov Chain on Alternating Permutations}
+Using the algorithm from section 4 and the bijection between 3, it is possible to generate a single uniformly random tajima tree in time $n\log n$. To generate multiple samples, the markov chain on alternating permutations presented in \cite{Diaconis} can be used. We describe it again here. The chain involves at each step randomly transposing two elements uniformly at random between the positions that are at least $2$ apart, accepting the move only if it yields a valid permutation. As established in \cite{Diaconis}, this chain symmetric and reversible with respect to the uniform distribution on alternating permutations. Thus, by first generating a uniformly random permutation as the starting point for this chain and then running the chain from there, it is possible to sample repeatedly from the uniform distribution on tajima trees. Simulations indicate that the moves this chain makes are accepted slightly above half of the time. We note here, that this chain can also be adopted to be reversible with respect to the tajima coalescent. This can be achieved due to the following lemma.
+\begin{proposition}
+Let $\sigma_{n - 1}$ be an alternating permutation. Then the number of cherries in the tree that one attains from the bijection presented in $\cite{Donaghey}$ is the number of numbers immediately surrounded by parentheses in the bracketing process. 
+\end{proposition}
+\begin{proof}
+This is immediate from the branching process described in $\cite{Donaghey}$
+\end{proof}
+
+\begin{thebibliography}{9}
+
+\bibitem{Donaghey} 
+J. Donaghey. 
+\textit{Alternating Permutations and Binary Increasing Trees}. Journal of Combinatorial Theory (A), 1975.
+
+\bibitem{Marchal} 
+P. Marchal. 
+\textit{Generating random alternating permutations in time $n\log n$}. 
+http://hal.archives-ouvertes.fr/docs/00/76/54/32/PDF/altperm.pdf, 2012.
+
+\bibitem{Diaconis} 
+P. Diaconis and Philip Wood. 
+\textit{Random double stochastic tridiagonal matrices}. 
+Random Structures and Algorithms, 2012.
+
+\bibitem{Stanley} 
+Richard Stanley.
+\textit{A Survey of Alternating Permutations}. 
+https://arxiv.org/abs/0912.4240, 2009. 
+
+\bibitem{Capello} 
+L. Capello, A. Veber and J. Palacios
+\textit{The Tajima heterochronous n-coalescent: inference
+from heterochronously sampled molecular data}. 
+https://arxiv.org/abs/2004.06826, 2020.
+
+\bibitem{Palacios} 
+JA Palacios et. al.
+\textit{Bayesian Estimation of Population Size Changes by
+Sampling Tajima’s Trees}. 
+Genetics, 2019. 
+
+\end{thebibliography}
+
+
+\end{document}

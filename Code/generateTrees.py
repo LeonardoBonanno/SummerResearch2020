@@ -1,6 +1,9 @@
+#code to generate uniformly random Ranked Unlabeled Tree and print it out as an ordered matching
+
 from generationAltPerm import *
 from permsToTrees import *
 
+n = 8
 N = 20
 
 def generateUniformTree(n):

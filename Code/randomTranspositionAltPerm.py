@@ -1,3 +1,5 @@
+#code for markov chain on alternating permutations, with and without tajima coalescent adjustments
+
 from generationAltPerm import *
 from permsToTrees import *
 from generateTrees import *

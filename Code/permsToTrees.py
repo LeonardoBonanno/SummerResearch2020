@@ -1,3 +1,5 @@
+# code to convert random alternating permutation to its tree permutation ready form
+
 import copy
 
 def complement(perm):

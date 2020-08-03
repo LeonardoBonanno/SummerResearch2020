@@ -1,5 +1,6 @@
 #code to generate uniformly random Ranked Unlabeled Tree and print it out as an ordered matching
 
+import time
 from generationAltPerm import *
 from permsToTrees import *
 
@@ -92,6 +93,13 @@ def buildTree(perm):
     if maxIndex != n - 1:
         newTree.setLeft(buildTree(perm[maxIndex + 1:]))
     return newTree
+
+
+start = time.time()
+randomPerm = generateUniformTree(10000)
+randomTrees = buildTree(randomPerm)
+end = time.time()
+print(end - start)
 
 
 

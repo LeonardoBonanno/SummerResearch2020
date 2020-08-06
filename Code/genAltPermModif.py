@@ -13,7 +13,7 @@ def update(u, x):
 def calculateAlpha(x_n, x_0):
     return math.sin(math.pi * x_n/ 2) / math.sin(math.pi * x_0/ 2)
 
-def generateX(n, acceptance):
+def generateX(n):
     X = [0] * n
     first = True
     while True:
@@ -23,21 +23,18 @@ def generateX(n, acceptance):
             X[i] = update(U[i], X[i-1])
         alpha = calculateAlpha(X[n-1], X[0])
         p = random.random()
-        acceptProb = 1 / (alpha + 1 / alpha)
-        acceptance.append(2 * acceptProb)
-        if p < 2 * acceptProb:
-            first = p < acceptProb
+        acceptProb = 1 / alpha
+        if p < acceptProb:
             break
-    return X, first
+    return X
 
-def generateY(first, X, n):
+def generateY(X, n):
     Y = [0] * n
-    increment, start = (1, 0) if first else (-1, n - 1)
     for i in range(n):
         if i % 2 == 0:
-            Y[i]= X[start + increment * i]
+            Y[i]= X[i]
         else:
-            Y[i] = 1 - X[start + increment * i]
+            Y[i] = 1 - X[i]
     return Y
 
 def convertPerm(sigma_prime, n):
@@ -46,27 +43,24 @@ def convertPerm(sigma_prime, n):
         sigma[i] = sigma_prime.index(i) + 1
     return sigma
     
-def generatePerm(n, acceptance):
-    X, first = generateX(n, acceptance)
-    Y = generateY(first, X, n)
+def generatePerm(n):
+    X = generateX(n)
+    Y = generateY(X, n)
     return convertPerm(list(np.argsort(Y)), n)
 
 def testMethod(trials, n):                       
     perms = dict()
-    acceptance = []
     for i in range(trials):
-        perm = tuple(generatePerm(n, acceptance))
+        perm = tuple(generatePerm(n))
         if perm in perms:
             perms[perm] += 1
         else:
             perms[perm] = 1
     print(len(perms))
-    print(sum(acceptance)/len(acceptance))
     for entry in perms.keys():
-        pass
-        #print(entry, perms[entry] * 100 / trials, " %")
+        print(entry, perms[entry] * 100 / trials, " %")
 
-testMethod(10000, 100)
+testMethod(100000, 4)
 
         
     

@@ -8,10 +8,10 @@ N = 30
 TRIALS = 1
 
 def update(u, x):
-    return 1 - (2 / math.pi) * math.asin(u * math.sin(math.pi * x/2))
+    return (2 / math.pi) * math.asin(u * math.sin(math.pi * (1 - x)/2))
 
 def calculateAlpha(x_n, x_0):
-    return math.sin(math.pi * x_n/ 2) / math.sin(math.pi * x_0/ 2)
+    return math.cos(math.pi * x_n/ 2) / math.cos(math.pi * x_0/ 2)
 
 def generateX(n, acceptance):
     X = [0] * n
@@ -62,8 +62,7 @@ def testMethod(trials, n):
             perms[perm] = 1
     print(len(perms))
     print(sum(acceptance)/len(acceptance))
-    for entry in perms.keys():
-        pass
+    #for entry in perms.keys():
         #print(entry, perms[entry] * 100 / trials, " %")
 
 testMethod(10000, 100)
@@ -72,4 +71,8 @@ testMethod(10000, 100)
     
     
 
+    
+
+        
+        
     

@@ -13,7 +13,7 @@ def update(u, x):
 def calculateAlpha(x_n, x_0):
     return math.cos(math.pi * x_n/ 2) / math.cos(math.pi * x_0/ 2)
 
-def generateX(n, acceptance):
+def generateX(n):
     X = [0] * n
     first = True
     while True:
@@ -24,7 +24,6 @@ def generateX(n, acceptance):
         alpha = calculateAlpha(X[n-1], X[0])
         p = random.random()
         acceptProb = 1 / (alpha + 1 / alpha)
-        acceptance.append(2 * acceptProb)
         if p < 2 * acceptProb:
             first = p < acceptProb
             break
@@ -46,8 +45,8 @@ def convertPerm(sigma_prime, n):
         sigma[i] = sigma_prime.index(i) + 1
     return sigma
     
-def generatePerm(n, acceptance):
-    X, first = generateX(n, acceptance)
+def generatePerm(n):
+    X, first = generateX(n)
     Y = generateY(first, X, n)
     return convertPerm(list(np.argsort(Y)), n)
 
@@ -55,17 +54,16 @@ def testMethod(trials, n):
     perms = dict()
     acceptance = []
     for i in range(trials):
-        perm = tuple(generatePerm(n, acceptance))
+        perm = tuple(generatePerm(n))
         if perm in perms:
             perms[perm] += 1
         else:
             perms[perm] = 1
     print(len(perms))
-    print(sum(acceptance)/len(acceptance))
-    #for entry in perms.keys():
-        #print(entry, perms[entry] * 100 / trials, " %")
+    for entry in perms.keys():
+        print(entry, perms[entry] * 100 / trials, " %")
 
-testMethod(10000, 100)
+testMethod(1000000, 6)
 
         
     

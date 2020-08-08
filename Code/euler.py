@@ -1,6 +1,8 @@
 import math
 import time
 
+n = 10
+
 
 def calculateFirstNEulerNumbers(n):
     x = [0] * (n + 1)
@@ -17,7 +19,10 @@ def calculateEulerNumber(i, x):
     x[i] = E_n
 
 t0 = time.time()
-calculateFirstNEulerNumbers(1000)
+x = calculateFirstNEulerNumbers(n)
+print(x)
+y = [math.factorial(i) * 2 * math.pow(2/math.pi, i + 1) /x[i] for i in range(n + 1)]
+print(y)
 t1 = time.time()
 print(t1 - t0)
 

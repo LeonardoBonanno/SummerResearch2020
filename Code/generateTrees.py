@@ -1,30 +1,22 @@
-#code to generate uniformly random Ranked Unlabeled Tree and print it out as an ordered matching
+# code to generate uniformly random Ranked Unlabeled Tree and print out its ordered matching representation
 
+# imports
 import time
 from generationAltPerm import *
 from permsToTrees import *
 
-n = 8
-N = 20
+# constants
+N = 30
 
-def generateUniformTree(n):
-    return complement(convertPerm(generatePerm(n)))
+# generate uniformly random tree perm in order easiest to print
+def generateUniformTreePerm(n):
+    return complement(convertToTreePerm(generateUniformPerm(n)))
 
+# helper sorting function
 def mySort(tuple):
     return tuple[2]
 
-def generateUniformTrees(n, samples):
-    return [generateUniformTree(n) for _ in range(samples)]
-
-def maximalElement(perm):
-    maxVal = 0
-    maxIndex = 0
-    for i in range(len(perm)):
-        if perm[i] > maxVal:
-            maxVal = perm[i]
-            maxIndex = i
-    return maxIndex, maxVal
-
+# tree class to help print out
 class Tree(object):
     def __init__(self, data):
         self.data = data
@@ -57,8 +49,8 @@ class Tree(object):
         cherries = [0]
         self.calculateCherriesHelper(cherries)
         return cherries[0]
-        
-
+    
+    # recursively traverses tree   
     def traverse(self, representation):
         info = [0,0]
         if self.left is not None:
@@ -81,25 +73,32 @@ class Tree(object):
             treeAsString += str((representation[i][0], representation[i][1])) + "^{" + str(representation[i][2]) + "}" + "\n"
         return treeAsString
 
-
-def buildTree(perm):
-    n = len(perm)
+# build a tree from a proper tree permutation, you can print right and left subtrees as well
+def buildTree(treePerm):
+    n = len(treePerm)
     if n == 1:
-        return Tree(perm[0])
-    maxIndex, maxVal = maximalElement(perm)
+        return Tree(treePerm[0])
+    maxIndex, maxVal = maximalElement(treePerm)
     newTree = Tree(maxVal)
     if maxIndex != 0:
-        newTree.setRight(buildTree(perm[:maxIndex]))
+        newTree.setRight(buildTree(treePerm[:maxIndex]))
     if maxIndex != n - 1:
-        newTree.setLeft(buildTree(perm[maxIndex + 1:]))
+        newTree.setLeft(buildTree(treePerm[maxIndex + 1:]))
     return newTree
 
+# generate uniform random tree with N + 1 leaves and print the ordered matching representation
+def main():
+    start = time.time()
+    randomPerm = generateUniformTreePerm(N)
+    randomTree = buildTree(randomPerm)
+    print(randomTree)
+    print("Printing random tree:")
+    end = time.time()
+    print("Computation time:", end - start)
 
-start = time.time()
-randomPerm = generateUniformTree(10000)
-randomTrees = buildTree(randomPerm)
-end = time.time()
-print(end - start)
+if __name__ == "__main__":
+    main()
+
 
 
 

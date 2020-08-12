@@ -1,13 +1,16 @@
+# File: gibbs sampling on tridiagonal stochastic matrices to alternating permutations
+
+# imports
 import numpy as np
 import random
 import math
+from generationAltPerm import generateY, convertToPerm
 
-def generateStochastic(n, steps):
-    X = [0] * n
-    for _ in range(steps):
-        update(X, n)
-    return X
+# constants
+samples = 1000000
+N = 6
 
+# markovian update for gibs sampling
 def update(X, n):
     i = random.sample(range(n), 1)[0]
     first = (i == 0)
@@ -16,8 +19,16 @@ def update(X, n):
     allow = (first) or (X[i - 1] + p < 1)
     if allow and (last or (X[i + 1] + p < 1)):
         X[i] = p
-    
-def convertToAlternating(X, n):
+
+# generate a length n stochastic matrix
+def generateStochastic(n, steps):
+    X = [0] * n
+    for _ in range(steps):
+        update(X, n)
+    return X
+
+# convert stochastic matrix to alternating sequence of reals  
+def convertToAlternating(X, forward, n):
     Y = [0] * n
     for i in range(n):
         if i % 2 == 0:
@@ -26,16 +37,12 @@ def convertToAlternating(X, n):
             Y[i] = 1 - X[i]
     return Y
 
-def convertPerm(sigma_prime, n):
-    sigma = [0] * n
-    for i in range(n):
-        sigma[i] = sigma_prime.index(i) + 1
-    return sigma
-
+# convert sequence of reals to alternating permutation
 def sequenceToPerm(C, n):
-    Y = convertToAlternating(C, n)
-    return convertPerm(list(np.argsort(Y)), n)
+    Y = generateY(C, True, n)
+    return convertToPerm(list(np.argsort(Y)), n)
 
+# gibbs sampling of real sequences (tridiagonal stochastic matrices), using the method described in Diaconis
 def gibbsSampling(samples, n):                       
     perms = dict()
     C = generateStochastic(n, int(10 * n * math.log(n)))
@@ -48,13 +55,15 @@ def gibbsSampling(samples, n):
             perms[perm] += 1
         else:
             perms[perm] = 1
-    print(len(perms))
-    for entry in perms.keys():
-        print(entry, perms[entry] * 100 / samples, " %")
+    for entry in perms:
+        print(entry, perms[entry] * 100 / (samples + 1), " %")
 
-samples = 1000000
-n = 6
-gibbsSampling(samples, n)
+def main():
+    gibbsSampling(samples, N)
+
+main()
+        
+
 
 
 

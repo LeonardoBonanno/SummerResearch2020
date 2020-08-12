@@ -4,8 +4,8 @@ import numpy as np
 import random
 import math
 
-N = 30
-TRIALS = 1
+N = 7
+trials = 100000
 
 def update(u, x):
     return (2 / math.pi) * math.asin(u * math.sin(math.pi * (1 - x)/2))
@@ -63,7 +63,7 @@ def testMethod(trials, n):
     for entry in perms.keys():
         print(entry, perms[entry] * 100 / trials, " %")
 
-testMethod(1000000, 6)
+testMethod(trials, N)
 
         
     

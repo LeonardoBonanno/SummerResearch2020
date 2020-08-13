@@ -57,5 +57,6 @@ def main():
         print("E_%d =" % i, E[i], "~", E_prime[i], "| Ratio:", ratios[i])
     print("\nComputation Time:", end - start)
 
-main()
+if __name__ == "__main__":
+    main()
 

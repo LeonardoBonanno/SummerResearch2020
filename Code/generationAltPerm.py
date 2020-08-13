@@ -7,8 +7,8 @@ import random
 import math
 
 # constants
-N = 30
-TRIALS = 1
+N = 6
+samples = 100000
 
 # conducts markovian update
 def update(x):
@@ -83,7 +83,7 @@ def testMethod(trials, n, acceptance, percentages):
             print(entry, "has frequency", perms[entry] * 100 / trials, "%")
 
 def main():
-    testMethod(1000000, 5, True, True)
+    testMethod(samples, N, False, True)
 
 if __name__ == "__main__":
     main()

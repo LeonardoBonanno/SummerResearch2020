@@ -16,6 +16,9 @@ def calculateEulerZigzagNumbers(n):
         calculateEulerZigzagNumber(i, E)
     return E
 
+def calculateNthEulerZigzagNumber(n):
+    return calculateEulerZigzagNumbers(n)[n]
+
 # helper function to calculate a single euler-zigzag number
 def calculateEulerZigzagNumber(i, E):
     E_i= 0

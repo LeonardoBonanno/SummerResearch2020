@@ -3,14 +3,26 @@ import matplotlib.pyplot as plt
 import math
 
 
+cache = {} 
 def cardinality(n, c):
+    return cardinalityHelper(n, c, cache)
+    
+
+def cardinalityHelper(n, c, cache):
+    if (n, c) in cache:
+        return cache[(n, c)]
     if c == 0:
         return 0
     if c == 1:
         return 1
     if 2 * c > n:
         return 0
-    return cardinality(n - 1, c) * c + cardinality(n - 1, c - 1) * (n - 2 * c + 1)
+    val = cardinality(n - 1, c) * c + cardinality(n - 1, c - 1) * (n - 2 * c + 1)
+    cache[(n, c)] = val
+    return val
+
+    
+
 
 def totalVariationTajimaUniform(n):
     E_nm1 = calculateNthEulerZigzagNumber(n - 1)
@@ -28,7 +40,7 @@ def plotDistance(n):
     plt.xlabel('n')
     plt.ylabel('Total Variation Distance')
     plt.show()
-    
-plotDistance(25)
+
+plotDistance(150)
         
         

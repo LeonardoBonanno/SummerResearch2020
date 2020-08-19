@@ -7,7 +7,6 @@ cache = {}
 def cardinality(n, c):
     return cardinalityHelper(n, c, cache)
     
-
 def cardinalityHelper(n, c, cache):
     if (n, c) in cache:
         return cache[(n, c)]
@@ -21,8 +20,29 @@ def cardinalityHelper(n, c, cache):
     cache[(n, c)] = val
     return val
 
+def proportions(n):
+    E_nm1 = calculateNthEulerZigzagNumber(n - 1)
+    C = [0] * int(n /2)
+    for c in range(1, int(n / 2) + 1):
+        C[c - 1] = cardinality(n, c) * (math.pow(2, -c)) / E_nm1
+    return C
+N = 120
+p = proportions(N)
+C = [i for i in range(1, int(N / 2) + 1)]
+plt.plot(C, p)
+plt.title('Proportion of Trees by Cherry Count')
+plt.xlabel('Cherries')
+plt.ylabel('Proportion of Trees')
+plt.show()
+        
     
 
+def uniformExpectedCherries(n):
+    E_nm1 = calculateNthEulerZigzagNumber(n - 1)
+    Ec = 0
+    for c in range(1, int(n / 2) + 1):
+        Ec += cardinality(n, c) * c / E_nm1
+    return Ec
 
 def totalVariationTajimaUniform(n):
     E_nm1 = calculateNthEulerZigzagNumber(n - 1)
@@ -41,6 +61,6 @@ def plotDistance(n):
     plt.ylabel('Total Variation Distance')
     plt.show()
 
-plotDistance(150)
+#plotDistance(170)
         
         

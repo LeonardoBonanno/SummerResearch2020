@@ -10,7 +10,7 @@ def cardinality(n, c):
 def cardinalityHelper(n, c, cache):
     if (n, c) in cache:
         return cache[(n, c)]
-    if c == 0:
+    if c == 0:  
         return 0
     if c == 1:
         return 1

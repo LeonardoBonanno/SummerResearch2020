@@ -8,38 +8,46 @@ rng = np.random.default_rng()
 def recursiveExactSampling(n):
     sigma = [0] * n
     numbers = [i for i in range(1, n + 1)]
-    samplingHelper(n, sigma, numbers, 0, True)
-    return sigma
+    return samplingHelper(numbers, True)
 
-def samplingHelper(n, sigma, numbers, start, forward):
-    if n == 1:
-        sigma[start] = numbers[0]
-        return
+def samplingHelper(numbers, forward):
+    n = len(numbers)
     if n == 0:
-        return
-    k = getK(n)
-    sigma[start + k - 1] = numbers[n - 1]
-    lowerNumbers = sorted(random.sample(numbers[0:n-1], k - 1)) if k > 1 else []
-    upperNumbers = sorted(list(set(numbers[:n - 1]).difference(set(lowerNumbers))))
+        return []
+    if n == 1:
+        return [numbers[0]]
+    k = getK(n, forward)
     if forward:
-        upperNumbers.reverse()
+        lowerNumbers = sorted(random.sample(numbers[0:n-1], k - 1)) if k > 1 else []
+        upperNumbers = sorted(list(set(numbers[0:n - 1]).difference(set(lowerNumbers))))
+        return samplingHelper(lowerNumbers, forward) + [numbers[n-1]] + samplingHelper(upperNumbers, not forward)
     else:
-        lowerNumbers.reverse()
-    if forward:
-        samplingHelper(k - 1, sigma, lowerNumbers, start, True)
-        samplingHelper(n - k, sigma, upperNumbers, start + k, False)
-    else:
-        samplingHelper(k - 1, sigma, lowerNumbers, start, False)
-        samplingHelper(n - k, sigma, upperNumbers, start + k, True)   
+        lowerNumbers = sorted(random.sample(numbers[1:], k - 1)) if k > 1 else []
+        upperNumbers = sorted(list(set(numbers[1:]).difference(set(lowerNumbers))))
+        return samplingHelper(lowerNumbers, forward) + [numbers[0]] + samplingHelper(upperNumbers, not forward)
+        
 
-def getK(n):
+def getK(n, forward):
     E = calculateEulerZigzagNumbers(n)
-    p = [0.5 * math.comb(n - 1, k - 1) * E[k - 1] * E[n - k] / E[n] for k in range(1, n + 1)]
-    k = list(rng.multinomial(1, p)).index(1) + 1
-    print(k)
+    values = list(range(1, n + 1, 2))
+    p = [math.comb(n - 1, k - 1) * E[k - 1] * E[n - k] / E[n] for k in values]
+    k = values[list(rng.multinomial(1, p)).index(1)]
     return k
 
-print(recursiveExactSampling(10))
+def testMethod(n):
+    dic = dict()
+    steps = 100000
+    for _ in range(steps):
+        perm = tuple(recursiveExactSampling(n))
+        if perm in dic:
+            dic[perm] += 1
+        else:
+            dic[perm] = 1
+    for entry in dic:
+        print(entry, ":", dic[entry])
+
+testMethod(4)
+
     
             
     

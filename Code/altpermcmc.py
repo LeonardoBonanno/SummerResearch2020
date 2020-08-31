@@ -8,8 +8,8 @@ import copy
 import random
 
 # constants
-N = 7
-samples = 1000000
+N = 5000
+samples = 100
 
 # helper function for generating two numbers that differ by more than one
 def generateIJ(n):
@@ -64,6 +64,13 @@ def update(currentPerm, n, tajima):
     if canUpdate(currentPerm, n, i, j):
         updateIJ(currentPerm, i, j, tajima)
 
+def difference(first, second, n):
+    total = 0
+    for i in range(n):
+        if first[i] != second[i]:
+            total += 1
+    return total
+    
 # alternating permutation MCMC with element swapping
 # tajima for whether want to metropolize the chain to converge to tajima
 # printTrees for whether want to print trees as we go
@@ -71,20 +78,27 @@ def alternatingPermMCMC(startingPerm, samples, tajima, printTrees):
     n = len(startingPerm)
     currentPerm = startingPerm
     sampDic = {}
+    total = 0
+    currentRep = [(0,0,0)] * n
     for _ in range(samples):
         c = calculateCherries(currentPerm)
         if printTrees:
-            print(buildTree(complement(convertToTreePerm(currentPerm))))
+            tree = buildTree(complement(convertToTreePerm(currentPerm)))
+            newRep = tree.getTree()
+            total += difference(newRep, currentRep, n)
+            currentRep = newRep
+            #print(tree)
         if tuple(currentPerm) in sampDic:
             sampDic[tuple(currentPerm)] += 1
         else:
             sampDic[tuple(currentPerm)] = 1
         update(currentPerm, n, tajima)
-    for entry in sampDic:
-        print(entry, "has frequency", sampDic[entry] * 100 / samples, "%")
+    print((total - n)/samples)
+    #for entry in sampDic:
+        #print(entry, "has frequency", sampDic[entry] * 100 / samples, "%")
 
 def main():
-    alternatingPermMCMC(generateUniformPerm(N), samples, False, False)
+    alternatingPermMCMC(generateUniformPerm(N), samples, False, True)
 
 main()
 

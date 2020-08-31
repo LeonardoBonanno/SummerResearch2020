@@ -63,6 +63,12 @@ class Tree(object):
         info.append(self.data)
         info = tuple(info)
         representation.append(info)
+
+    def getTree(self):
+        representation = []
+        self.traverse(representation)
+        representation.sort(key = mySort)
+        return representation
         
     def __str__(self):
         representation = []

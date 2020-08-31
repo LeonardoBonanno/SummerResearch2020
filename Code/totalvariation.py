@@ -20,23 +20,37 @@ def cardinalityHelper(n, c, cache):
     cache[(n, c)] = val
     return val
 
-def proportions(n):
+def cardinalities(n):
     E_nm1 = calculateNthEulerZigzagNumber(n - 1)
     C = [0] * int(n /2)
     for c in range(1, int(n / 2) + 1):
-        C[c - 1] = cardinality(n, c) * (math.pow(2, -c)) / E_nm1
+        C[c - 1] = cardinality(n, c)
     return C
-N = 120
-p = proportions(N)
-C = [i for i in range(1, int(N / 2) + 1)]
-plt.plot(C, p)
-plt.title('Proportion of Trees by Cherry Count')
-plt.xlabel('Cherries')
-plt.ylabel('Proportion of Trees')
-plt.show()
-        
-    
 
+def proportions(n, tajima):
+    E_nm1 = calculateNthEulerZigzagNumber(n - 1)
+    C = [0] * int(n /2)
+    for c in range(1, int(n / 2) + 1):
+        if tajima:
+            C[c - 1] = cardinality(n, c) * (math.pow(2, -c)) / E_nm1
+        else:
+            C[c - 1] = cardinality(n, c) / E_nm1
+    total = 0
+    for c in range(int(0.3 * n), int(0.4 * n)):
+        total += C[c]
+    print(total/sum(C))
+    return C
+
+def cherryProportions(N, tajima):
+    p = proportions(N, tajima)
+    C = [i for i in range(1, int(N / 2) + 1)]
+    plt.plot(C, p)
+    plt.title('Proportion of Trees by Cherry Count')
+    plt.xlabel('Cherries')
+    plt.ylabel('Proportion of Trees')
+    plt.show()
+   
+    
 def uniformExpectedCherries(n):
     E_nm1 = calculateNthEulerZigzagNumber(n - 1)
     Ec = 0
@@ -61,6 +75,6 @@ def plotDistance(n):
     plt.ylabel('Total Variation Distance')
     plt.show()
 
-#plotDistance(170)
+plotDistance(150)
         
         
